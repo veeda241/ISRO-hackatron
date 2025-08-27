@@ -14,7 +14,7 @@ model_path = base_path / "modeling" / "AQI_model.pkl"
 try:
     df = pd.read_csv(csv_path, encoding="utf-8")
 except UnicodeDecodeError:
-    print("🔄 UTF-8 failed — retrying with 'latin1'")
+    print("UTF-8 failed - retrying with 'latin1'")
     df = pd.read_csv(csv_path, encoding="latin1")
 
 # Clean column names
@@ -29,6 +29,12 @@ df.rename(columns={
     'spm': 'pm10'
 }, inplace=True)
 
+
+cols = pd.Series(df.columns)
+for dup in cols[cols.duplicated()].unique():
+    cols[cols[cols == dup].index.values.tolist()] = [dup + '.' + str(i) if i != 0 else dup for i in range(sum(cols == dup))]
+df.columns = cols
+
 # Choose features available
 features = ['pm25', 'pm10', 'no2', 'so2']
 df = df[features].copy()
@@ -37,7 +43,7 @@ df = df[features].copy()
 for col in features:
     df[col] = pd.to_numeric(df[col], errors='coerce')
 df.dropna(inplace=True)
-print(f"✅ Cleaned rows remaining: {len(df)}")
+print(f"Cleaned rows remaining: {len(df)}")
 
 # Create dummy AQI labels (optional)
 # Here we simulate an AQI target using a synthetic formula
@@ -56,9 +62,9 @@ model.fit(X, y)
 
 # Evaluate
 preds = model.predict(X)
-print(f"\n📊 R² Score: {r2_score(y, preds):.4f}")
-print(f"📊 MSE     : {mean_squared_error(y, preds):.2f}")
+print(f"R-squared Score: {r2_score(y, preds):.4f}")
+print(f"MSE: {mean_squared_error(y, preds):.2f}")
 
 # Save model
 joblib.dump(model, model_path)
-print(f"✅ Model saved to: {model_path}")
+print(f"Model saved to: {model_path}")

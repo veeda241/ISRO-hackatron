@@ -1,7 +1,8 @@
 import pandas as pd
 
-def load_openaq_file(path="data/OpenAQ_PM25.csv"):
-    """Load PM2.5 readings from OpenAQ"""
+def load_imd_rainfall(path="data/raw/IMD_Rainfall.csv"):
+    """Load rainfall data from IMD"""
     df = pd.read_csv(path)
-    df = df[df['parameter'] == 'pm25']
-    return df[['city', 'value', 'date.local']]
+    # Assuming the columns are 'date', 'city', and 'rainfall'
+    # Adjust column names if they are different in the actual file
+    return df[['date', 'city', 'rainfall']]

@@ -1,0 +1,6 @@
+pandas
+requests
+prophet==1.1.1
+pystan==2.19.1.1
+scikit-learn
+gradio

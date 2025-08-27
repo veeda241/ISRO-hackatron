@@ -1,21 +1,12 @@
 # forecast_pm25.py
 from prophet import Prophet
 import pandas as pd
+from pathlib import Path
 
-df = pd.read_csv(r"D:\vyas\ISRO-hackatron\airquantity_vitualizer\data\raw\data.csv")
-# Adjust the path to your CSV file as needed
-# For example, it could be "data/raw/pm25_patna.csv" if you
-# are using the output from fetch_openaq_data.py
-# or "data/raw/pm25_data.csv" if you have a different dataset
-# Adjust the path to your CSV file as needed
-# For example, it could be "data/raw/pm25_patna.csv" if you
-# are using the output from fetch_openaq_data.py
-# or "data/raw/pm25_data.csv" if you have a different dataset
+base_path = Path(__file__).resolve().parent.parent
+csv_path = base_path / "data" / "raw" / "data.csv"
+df = pd.read_csv(csv_path)
 
-# or "data/raw/data.csv" if you have a generic dataset
-# or "data/raw/data" if there's no .csv extension
-
-  # or just "data/raw/data" if there's no .csv extension
 
 # Ensure the CSV file has 'datetime' and 'value' columns
 # If the columns are named differently, adjust accordingly
@@ -28,4 +19,6 @@ model.fit(df)
 
 future = model.make_future_dataframe(periods=24, freq='H')
 forecast = model.predict(future)
-forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].to_csv("models/predicted_pm25.csv", index=False)
+output_path = base_path / "modeling" / "predicted_pm25.csv"
+forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].to_csv(output_path, index=False)
+print(f"Forecast saved to: {output_path}")

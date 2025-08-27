@@ -3,7 +3,7 @@ import joblib
 from pathlib import Path
 
 # 📦 Load the trained model from modeling folder
-model_path = Path(__file__).resolve().parent.parent / "modeling" / "AQI_model.pkl"
+model_path = Path(__file__).resolve().parent.parent.parent / "modeling" / "AQI_model.pkl"
 model = joblib.load(model_path)
 
 # 🔮 Define prediction function
